@@ -58,7 +58,12 @@ export class TransformOperationExecutor {
                 subType =>
                   subType.name === subValue[(targetType as { options: TypeOptions }).options.discriminator.property]
               );
-              const options: TypeHelpOptions = { newObject: newValue, object: subValue, property: undefined };
+              const options: TypeHelpOptions = {
+                newObject: newValue,
+                object: subValue,
+                property: undefined,
+                data: this.options.data,
+              };
               const newType = targetType.typeFunction(options);
               realTargetType === undefined ? (realTargetType = newType) : (realTargetType = realTargetType.value);
               if (!targetType.options.keepDiscriminatorProperty)
@@ -218,7 +223,12 @@ export class TransformOperationExecutor {
         } else if (targetType) {
           const metadata = defaultMetadataStorage.findTypeMetadata(targetType as Function, propertyName);
           if (metadata) {
-            const options: TypeHelpOptions = { newObject: newValue, object: value, property: propertyName };
+            const options: TypeHelpOptions = {
+              newObject: newValue,
+              object: value,
+              property: propertyName,
+              data: this.options.data,
+            };
             const newType = metadata.typeFunction ? metadata.typeFunction(options) : metadata.reflectedType;
             if (
               metadata.options &&
@@ -409,7 +419,14 @@ export class TransformOperationExecutor {
     }
 
     metadatas.forEach(metadata => {
-      value = metadata.transformFn({ value, key, obj, type: transformationType, options: this.options });
+      value = metadata.transformFn({
+        value,
+        key,
+        obj,
+        type: transformationType,
+        options: this.options,
+        data: this.options.data,
+      });
     });
 
     return value;

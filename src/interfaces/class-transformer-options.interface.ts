@@ -76,4 +76,9 @@ export interface ClassTransformOptions {
    * DEFAULT: `true`
    */
   exposeUnsetFields?: boolean;
+
+  /**
+   * Additional user data that can be accessed within Type and Transform decorators.
+   */
+  data?: any;
 }
